@@ -20,6 +20,7 @@
 #   JOBS=8               parallel jobs for the kernel build
 
 DEVICE ?= poco-x5-pro
+export DEVICE
 JOBS ?= 8
 SECS ?= 600
 ARGS_OPEN ?= cpus=1

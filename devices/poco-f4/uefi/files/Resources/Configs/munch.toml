@@ -1,0 +1,27 @@
+#
+# Boot Shim Configs
+#
+[boot_shim]
+requires_kernel_header = true
+
+#
+# UEFI FD Configs
+# kona (SM8250): UEFI FD at 0x9FC00000, size 0x300000 (see MemoryMapLib.c).
+# redwood (SM7325) was 0x9FD00000 / 0x200000 — different SoC, different FD region.
+#
+[uefi_fd]
+base = 0x9FC00000
+size = 0x300000
+
+#
+# Android Boot Image Kernel Configs
+#
+[boot_image_kernel]
+kernel_compression = "gzip"
+append_dtb         = true
+
+#
+# Android Boot Image Configs
+#
+[boot_image]
+header_version = 1
