@@ -48,11 +48,13 @@ kernel drivers remain:
     `WCNSS_qcom_cfg.ini` + `wlan_mac.bin`).
   - **IPA 4.5** (redwood: 4.11) — different register layout in `hakios.ipa.c`. Firmware:
     `ipa_fws.*` + `ipa_uc.*` in `fw-ipa/` (in `/vendor/firmware`, not via the modem).
-  - **Modem: SPLIT layout** (redwood: monolithic). Munch's modem is `/vendor/firmware_mnt/image/
-    modem_pr/{so,mcfg}/` — `so/*.mbn` (the split modem shared objects, ~25 files) + `mcfg/configs/`
-    (carrier configs, ~275 files). There is **no `modem.mdt`** on this phone and **no `mpss`
-    reserved-memory node**. `hakios.mpss.c` (written for redwood's monolithic modem loaded into a
-    fixed `soc_mpss_mem` region) will need rework for this split architecture.
+  - **Modem: SPLIT layout** (redwood: monolithic). Munch's modem is an **external SDX55 on PCIe**,
+    not an integrated MPSS loaded by the AP via TrustZone. The firmware is `/vendor/firmware_mnt/
+    image/modem_pr/{so,mcfg}/` — `so/*.mbn` (split PIE shared objects, ~25 files) + `mcfg/configs/`
+    (carrier configs, ~275 files). There is **no `modem.mdt`**, **no `mpss` reserved-memory
+    node**, and **no `qcom,mss`/`qcom,pas` node** on this phone. `hakios.mpss.c` (written for
+    redwood's integrated MPSS) needs a **new driver** (PCIe + split-`.so` + QMI-over-PCIe), not a
+    port. See `MODEM-ARCHITECTURE.md` for the full analysis.
   - **Audio codec: NXP TFA9894** (`tfa98xx.cnt`, redwood: Awinic AW88263s) — different amplifier
     family. Audio DSP firmware: `adsp.{mdt,b00..b18}` (19 segments; redwood has 36) in `fw-audio/`.
   - **Haptic: AW8697** — same chip as redwood (`aw8697_haptic.bin` + `aw8697_rtp_1.bin` in
