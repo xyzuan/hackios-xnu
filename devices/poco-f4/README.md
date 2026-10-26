@@ -46,8 +46,11 @@ kernel drivers remain:
     bring-up path; `hakios.wifi.c`/`hakios.lx.c` are written for the WPSS DSP. The firmware is
     loaded by the WLAN driver at runtime over PCIe, not a pullable file (`fw-wifi/` has only
     `WCNSS_qcom_cfg.ini` + `wlan_mac.bin`).
-  - **IPA 4.5** (redwood: 4.11) — different register layout in `hakios.ipa.c`. Firmware:
-    `ipa_fws.*` + `ipa_uc.*` in `fw-ipa/` (in `/vendor/firmware`, not via the modem).
+  - **IPA** (`qcom,ipa@1e00000`, `qcom,ipa-hw-ver = <0x11>` = 17 — the SoC's IPA version
+    register value). `hakios.ipa.c` (redwood) is keyed on redwood's IPA version; needs checking
+    against the IPA 4.x version table to confirm whether the register layout matches. Firmware:
+    `ipa_fws.*` + `ipa_uc.*` in `fw-ipa/` (separate AP-side MDT in `/vendor/firmware`, not in
+    the modem image like redwood).
   - **Modem: SPLIT layout** (redwood: monolithic). Munch's modem is an **external SDX55 on PCIe**,
     not an integrated MPSS loaded by the AP via TrustZone. The firmware is `/vendor/firmware_mnt/
     image/modem_pr/{so,mcfg}/` — `so/*.mbn` (split PIE shared objects, ~25 files) + `mcfg/configs/`
